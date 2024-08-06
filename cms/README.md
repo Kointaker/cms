@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+# cms
+Content Management System
+all files are stored in the cms folder
+work was done using a macbook
+=======
 # CakePHP Application Skeleton
 
 ![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=master)
@@ -51,3 +57,4 @@ Other environment agnostic settings can be changed in `config/app.php`.
 The app skeleton uses [Milligram](https://milligram.io/) (v1.3) minimalist CSS
 framework by default. You can, however, replace it with any other library or
 custom styles.
+>>>>>>> 1aef376 (Database Configuration)
