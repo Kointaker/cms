@@ -67,7 +67,7 @@ class ArticlesController extends AppController
         
         // Set tags to the view context
         $this->set('tags', $tags);
-        
+
         $this->set('article', $article);
     }
 
@@ -83,5 +83,21 @@ class ArticlesController extends AppController
         }
     }
 
+    public function tags()
+    {
+        // the 'pass' key is provided by CakePHP and contains all 
+        // the passed URL path segments in the request.
+        $tags = $this->request->getParam('pass');
+
+        // Use the Articlestable to find tagged articles.
+        $articles = $this->Articles->find('tagged', tags: $tags)
+            ->all();
+        
+        // Pass variables into the view template context.
+        $this->set([
+            'articles' => $articles,
+            'tags' => $tags
+        ]);
+    }
 }
 
