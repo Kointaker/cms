@@ -18,6 +18,7 @@ class ArticlesTable extends Table
     {
         parent::initialize($config);
         $this->addBehavior('Timestamp');
+        $this->belongsTomany('Tags');
     }
     public function beforeSave(EventInterface $event, $entity, $options)
     {
@@ -38,4 +39,6 @@ class ArticlesTable extends Table
             ->minLength('body', 10);
         return $validator;
         }
-}
+
+        
+    }
