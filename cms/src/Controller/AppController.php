@@ -40,6 +40,7 @@ class AppController extends Controller
     public function initialize(): void
     {
         parent::initialize();
+        $this->loadComponent('Authentication.Authentication');
 
         $this->loadComponent('Flash');
 
@@ -48,5 +49,13 @@ class AppController extends Controller
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
+    }
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        // For all controllers in our application, make index and view 
+        // Actions public, skipping the authentication check
+        $this->Authentication->addUnauthenticatedActions(['index', 'view']);
     }
 }
