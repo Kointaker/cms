@@ -16,16 +16,56 @@ class ArticlesTable extends Table
     {
         parent::initialize($config);
         $this->addBehavior('Timestamp');
-        $this->belongsTomany('Tags');
+        $this->belongsToMany('Tags', [
+            'joinTable' => 'articles_tags',
+            'dependant' => true
+        ]);
     }
     public function beforeSave(EventInterface $event, $entity, $options)
     {
+        if ($entity->tag_string) {
+            $entity->tags = $this->_buildTags($entity->tag_string);
+        }
         if ($entity->isNew() && !$entity->slug) {
             $sluggedTitle = Text::slug($entity->title);
             // trim slug to maximum length defined in schema
             $entity->slug = substr($sluggedTitle, 0, 191);
         }
     }
+
+    protected function _buildTags($tagString)
+        {
+            // Trim tags
+            $newTags = array_map('trim', explode(',', $tagString));
+            // Remove all empty tags
+            $newTags = array_filter($newTags);
+            // Reduce duplicated tags
+            $newTags = array_unique($newTags);
+
+            $out = [];
+            $tags = $this->Tags->find()
+                ->where(['Tags.title IN' => $newTags])
+                ->all();
+
+            // Remove existing tags from the list of new tags.
+            foreach ($tags->extract('title') as $existing) {
+                $index = array_search($existing, $newTags);
+                if ($index !== false) {
+                    unset($newTags[$index]);
+                }
+            }
+            // Add extising tags.
+            foreach ($tags as $tag) {
+                $out[] = $tag;
+            }
+            // Add new tags.
+            foreach ($newTags as $tag) {
+                $out[] = $this->Tags->newEntity(['title' => $tag]);
+            }
+       
+            return $out;
+        }
+        
     public function validationDefault(Validator $validator): Validator
     {
         $validator
@@ -60,5 +100,4 @@ class ArticlesTable extends Table
             }
             return $query->groupBy(['Articles.id']);
         }
-    
     }
