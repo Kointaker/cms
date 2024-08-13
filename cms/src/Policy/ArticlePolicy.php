@@ -5,7 +5,7 @@ namespace App\Policy;
 
 use App\Model\Entity\Article;
 use Authorization\IdentityInterface;
-
+use App\Policy\ServerRequest;
 /**
  * Article policy
  */
@@ -18,7 +18,8 @@ class ArticlePolicy
      * @param \App\Model\Entity\Article $article
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Article $article)
+    
+     public function canAdd(IdentityInterface $user, Article $article)
     {
         return true;
     }
@@ -32,7 +33,7 @@ class ArticlePolicy
      */
     public function canEdit(IdentityInterface $user, Article $article)
     {
-        return $this->isAuthor($user,$article);
+        return $this->isAuthor($user, $article);
     }
 
     /**
@@ -54,7 +55,8 @@ class ArticlePolicy
      * @param \App\Model\Entity\Article $article
      * @return bool
      */
-    public function isAuthor(IdentityInterface $user, Article $article)
+    
+     public function isAuthor(IdentityInterface $user, Article $article)
     {
         return $article->user_id === $user->getIdentifier();
     }

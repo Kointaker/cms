@@ -17,10 +17,10 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $query = $this->Users->find();
-        $users = $this->paginate($query);
-
+        $this->Authorization->skipAuthorization();
+        $users = $this->paginate($this->Users);
         $this->set(compact('users'));
+        $this->set('_serialize', ['users']);
     }
 
     /**
@@ -32,8 +32,11 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, contain: ['Articles']);
-        $this->set(compact('user'));
+        
+        $this->set('user', $user);
+        $this->set('_serialize', ['user']);
     }
 
     /**
@@ -44,6 +47,7 @@ class UsersController extends AppController
     public function add()
     {
         $this->Authorization->skipAuthorization();
+
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
@@ -55,6 +59,7 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
     }
 
     /**
@@ -66,6 +71,7 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $user = $this->Users->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
