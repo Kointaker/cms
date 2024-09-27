@@ -1,4 +1,4 @@
 # cms
-Content Management System
-all files are stored in the cms folder
-work was done using a macbook
+Content Management System tutorial from CakePHP website.
+all files are stored in the cms folder.
+Work was done on a macbook air.
